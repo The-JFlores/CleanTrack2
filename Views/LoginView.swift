@@ -14,8 +14,17 @@ struct LoginView: View {
     @State private var errorMessage = ""
     @State private var isShowingRegister = false
     @State private var isLoading = false
+    @State private var isLoggedIn = false  // State to control if the user is logged in
 
     var body: some View {
+        if isLoggedIn {
+            HomeView()  // Show main screen when logged in
+        } else {
+            loginFormView
+        }
+    }
+
+    var loginFormView: some View {
         NavigationView {
             VStack(spacing: 20) {
                 Text("Login")
@@ -60,7 +69,7 @@ struct LoginView: View {
                 Spacer()
 
                 NavigationLink(destination: RegisterView(), isActive: $isShowingRegister) {
-                Button("Create Account") {
+                    Button("Create Account") {
                         isShowingRegister = true
                     }
                 }
@@ -78,8 +87,8 @@ struct LoginView: View {
             if let error = error {
                 errorMessage = error.localizedDescription
             } else {
-                // Login successful
-                // Aquí puedes navegar a la pantalla principal
+                // Login successful: update state to logged in
+                isLoggedIn = true
                 print("User logged in: \(result?.user.email ?? "")")
             }
         }
